@@ -44,11 +44,14 @@ public class RobotContainer {
   public static RunHarvester m_runHarvester;
 
   public final static Joystick leftJoystick = new Joystick(0);
-  public final static JoystickButton autoAimButton = new JoystickButton(leftJoystick, 0);
+  public final static JoystickButton autoAimButton = new JoystickButton(leftJoystick, 1);
 
-  public final static Joystick rightJoystick = new Joystick(1);
-  public final static JoystickButton shootButton = new JoystickButton(rightJoystick, 0);
-  public final static JoystickButton feedButton = new JoystickButton(rightJoystick, 1);
+  public final static Joystick rightJoystick = new Joystick(1);  
+  public final static JoystickButton shootButton = new JoystickButton(rightJoystick, 1);
+  public final static JoystickButton feedButton = new JoystickButton(rightJoystick, 2);
+
+  public final static POVButton aimDownHat = new POVButton(rightJoystick, 0);
+  public final static POVButton aimUpHat = new POVButton(rightJoystick, 180);
 
   public final static Joystick operatorJoystick = new Joystick(2);
   public final static JoystickButton harvesterArmButton = new JoystickButton(operatorJoystick, 8);
@@ -73,6 +76,9 @@ public class RobotContainer {
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
     new DriveMecanum(m_mecanumDrivetrain);
+    System.out.println(MecanumDrivetrain.ahrs.getPitch());
+    System.out.println(MecanumDrivetrain.ahrs.getYaw());
+    System.out.println(MecanumDrivetrain.ahrs.getRoll());
   }
 
   /**

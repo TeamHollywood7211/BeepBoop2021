@@ -36,13 +36,13 @@ public class RunConveyor extends CommandBase {
       //Conveyor.backConveyor.set(-speed * 0.9);
     }
     //Make sure our motor is over good enough RPM to get a proper shot off before allowing us to take a shot.
-    else if (RobotContainer.operatorJoystick.getRawAxis(2) >= 0.5 && RobotContainer.operatorJoystick.getRawAxis(3) >= 0.5){
+    else if ((RobotContainer.operatorJoystick.getRawAxis(2) >= 0.5 && RobotContainer.operatorJoystick.getRawAxis(3) >= 0.5) || (RobotContainer.feedButton.get() && RobotContainer.shootButton.get())){
 
         Conveyor.frontConveyor.set(-speed);
         //Conveyor.backConveyor.set(speed * 0.9);
     }
     //check operator left trigger to move conveyor forward if the driver isn't trying to unjam it and they aren't trying to feed it into shooter either.
-    else if (RobotContainer.operatorJoystick.getRawAxis(2) >= 0.5){
+    else if (RobotContainer.operatorJoystick.getRawAxis(2) >= 0.5 || RobotContainer.feedButton.get()){
       Conveyor.frontConveyor.set(-speed);
       //Conveyor.backConveyor.set(speed * 0.9);
     }

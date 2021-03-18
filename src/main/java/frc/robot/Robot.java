@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
    // m_seekAndCenter.cancel();
-    m_autonCommand.cancel();
+    //m_autonCommand.cancel();
 
     //Run the robot conveyor
     m_runConveyor.schedule();

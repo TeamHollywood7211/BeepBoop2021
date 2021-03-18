@@ -28,6 +28,9 @@ public class Shooter extends SubsystemBase {
   public static CANEncoder shooterEncoder;
   static double deviser;
 
+  public static CANSparkMax verticalMotor;
+  public static CANEncoder verticalEncoder;
+
   public static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   public static NetworkTableEntry ty = table.getEntry("ty");
   public static NetworkTableEntry tv = table.getEntry("tv");
@@ -42,6 +45,9 @@ public class Shooter extends SubsystemBase {
     shootingFrontMotor = new CANSparkMax(40, MotorType.kBrushless);
     shootingBackMotor = new CANSparkMax(41, MotorType.kBrushless);
     shooterEncoder = shootingFrontMotor.getEncoder();
+
+    verticalMotor = new CANSparkMax(50, MotorType.kBrushless);
+    verticalEncoder = verticalMotor.getEncoder();
   }
   @Override
   

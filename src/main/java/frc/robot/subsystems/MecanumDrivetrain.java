@@ -9,7 +9,6 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.DriveMecanum;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANEncoder;
 
 //import com.kauailabs.navx.frc.*;
 
@@ -38,9 +37,6 @@ public class MecanumDrivetrain extends SubsystemBase
     public static MecanumDrive mecDrive;
     public static AHRS ahrs;
 
-    public static CANSparkMax verticalMotor;
-    public static CANEncoder verticalEncoder;
-
     public static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     public static NetworkTableEntry tx = table.getEntry("tx");
     public static NetworkTableEntry ty = table.getEntry("ty");
@@ -67,22 +63,20 @@ public class MecanumDrivetrain extends SubsystemBase
 
         mecDrive = new MecanumDrive(frontLeft, backLeft, frontRight, backRight);
         mecDrive.setSafetyEnabled(false);
-
-        verticalMotor = new CANSparkMax(50, MotorType.kBrushless);
-        verticalEncoder = verticalMotor.getEncoder();
     }
 
     public static void driveByJoystick(){
-        if(RobotContainer.operatorJoystick.getRawButton(1) == true){
-            //Put Horizontal aim here
-            verticalMotor.set(verticalAuto());
+        if(RobotContainer.autoAimButton.get()){
+            
+            driveCarte(0, 0, -horizontalAuto());
+            //verticalMotor.set(verticalAuto());
         }
         else{
-            driveCarte(-returnLeftAxis(0), returnLeftAxis(1), -returnRightAxis(0));
+            driveCarte(returnLeftAxis(0), -returnLeftAxis(1), returnRightAxis(0));
         }
     }
     public static void driveCarte(double ySpeed, double xSpeed, double zRotation){
-        mecDrive.driveCartesian(ySpeed, xSpeed, zRotation, ahrs.getAngle());
+        mecDrive.driveCartesian(ySpeed, xSpeed, zRotation, -ahrs.getAngle());
     }
 
     public static double deadzone = 0.3;
@@ -118,39 +112,23 @@ public class MecanumDrivetrain extends SubsystemBase
     }
     
     public static double horizontalAuto(){
-        double Kp = 0.0075; // Proportional control constant
+        double Kp = 0.0225; // Proportional control constant
         double x = tx.getDouble(0.0);
-        double v = tv.getDouble(1);
+        double v = tv.getDouble(0);
         double horizontalError = -x;
         double chassisAdjust = 0;
+        double targetX = 0;
     
         // If A is held down, run a PID loop to center the turret.
         if(v == 1){
-            if (x > 0.5) {
+            if (x > targetX) {
                 chassisAdjust = Kp * horizontalError;
             } 
-            else if (x < 0.5) {
+            else if (x < targetX) {
                 chassisAdjust = Kp * horizontalError;
             }
         }
         return chassisAdjust;
     }
     
-    public static double verticalAuto(){
-        double Kp = 0.02; // Proportional control constant
-        double y = ty.getDouble(0.0);
-        double v = tv.getDouble(1);
-        double verticalError = -y;
-        double angleAdjust = 0;
-    
-        if(v == 1){
-            if (y > 0.5) {
-                angleAdjust = Kp * verticalError;
-            } 
-            else if (y < 0.5) {
-                angleAdjust = Kp * verticalError;
-            }
-        }
-          return angleAdjust;
-    }
 }

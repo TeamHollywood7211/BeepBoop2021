@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Shooter;
 
+import edu.wpi.first.wpilibj.smartdashboard.*;
+
+
 public class RunShooter extends CommandBase {
   /**
    * Creates a new RunShooter.
@@ -32,7 +35,17 @@ public class RunShooter extends CommandBase {
   @Override
   public void execute() {
     //check the operator controller to see if we want to shoot it. If we do, fire.
-    if (RobotContainer.operatorJoystick.getRawAxis(3) >= 0.5 && cellReady == true){
+    SmartDashboard.putNumber("turretEncoder", Shooter.verticalEncoder.getPosition());
+    if(RobotContainer.aimUpHat.get()){
+      Shooter.verticalMotor.set(0.2);
+    }
+    else if(RobotContainer.aimDownHat.get()){
+      Shooter.verticalMotor.set(-0.2);
+    }
+    else{
+      Shooter.verticalMotor.set(0);
+    }
+    if ((RobotContainer.operatorJoystick.getRawAxis(3) >= 0.5 || RobotContainer.shootButton.get()) && cellReady == true){
       Shooter.shootingFrontMotor.set(0.89);
       Shooter.shootingBackMotor.set(-0.89);
       }
