@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commands.RunShooter;
@@ -32,8 +33,8 @@ public class Shooter extends SubsystemBase {
   public static CANEncoder verticalEncoder;
 
   public static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-  public static NetworkTableEntry ty = table.getEntry("ty");
   public static NetworkTableEntry tv = table.getEntry("tv");
+  public static NetworkTableEntry ta = table.getEntry("ta");
 
   //work in progress variables for distance//
   //public static double a1 = 83.9875579;
@@ -71,22 +72,77 @@ public class Shooter extends SubsystemBase {
     }
     return distance;
   }*/
-  public static double autoVertical(){
-    double Kp = 0.02; // Proportional control constant
-    double y = ty.getDouble(0.0);
-    double v = tv.getDouble(1);
-    double headingError = -y;
-    double angleAdjust = 0;
+  public static void autoVertical(){
+    double a = ta.getDouble(0.0);
+    double v = tv.getDouble(0);
 
-    // If A is held down, run a PID loop to center the turret.
-    if(v == 1){
-      if (y > 0.5) {
-        angleAdjust = Kp * headingError;
-      } 
-      else if (y < 0.5) {
-        angleAdjust = Kp * headingError;
+    //Encoder values
+    double currentPos = verticalEncoder.getPosition();
+    double maxIncline = -110;
+    double maxDecline = 0;
+
+    double closestPos = -70.716;
+    double middlePos = -27.4;
+    double farthestPos = -1;
+
+    double middleArea = 1.219;
+    double farthestArea = 0.655;
+    double closestArea = 2.324;
+
+    //double kP = 0.009;
+    //double movementError = 0;
+    double motorAdjust = 0;
+
+    if (maxIncline > currentPos || currentPos < maxDecline){
+      if(a > closestArea - 0.4 && a < closestArea + 0.4){
+          if(closestPos - 5 < currentPos){
+            motorAdjust = -0.25;
+          }
+          else if(closestPos - 5 > currentPos){
+            motorAdjust = 0.25;
+          }
+          else{
+            motorAdjust = 0;
+          }
+      }
+      else if (a > middleArea - 0.4 && a < closestArea + 0.2){
+        if(middlePos - 5 < currentPos){
+          motorAdjust = -0.25;
+        }
+        else if(middlePos - 5 > currentPos){
+          motorAdjust = 0.25;
+        }
+        else{
+          motorAdjust = 0;
+        }
+      }
+      else if(a > farthestArea - 0.2 && a < farthestArea + 0.2){
+        if(farthestPos - 5 < currentPos){
+          motorAdjust = -0.25;
+        }
+        else if(farthestPos - 5 > currentPos){
+          motorAdjust = 0.25;
+        }
+        else{
+          motorAdjust = 0;
+        }
+      }
+      else{
+        if(v == 0)
+        {
+          motorAdjust = -0.1;
+        }
+      }
+      verticalMotor.set(motorAdjust);
+      SmartDashboard.putNumber("motorAdjust", motorAdjust);
+    }
+    else{
+      if(maxIncline < currentPos){
+        verticalMotor.set(-0.1);
+      }
+      else{
+        verticalMotor.set(0.1);
       }
     }
-    return angleAdjust;
   }
 }

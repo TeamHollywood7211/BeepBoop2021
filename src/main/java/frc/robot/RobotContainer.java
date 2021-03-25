@@ -9,7 +9,8 @@ package frc.robot;
 
 import frc.robot.commands.*;
 
-import frc.robot.commands.auton2021.SequentialAuton2021;
+import frc.robot.commands.auton2021.BaitAuton2021.SequentialAuton2021;
+import frc.robot.commands.auton2021.BallAuton2021.FindBallsSequential2021;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -39,6 +40,7 @@ public class RobotContainer {
   //The robot's commands
 
   public SequentialAuton2021 m_seqAuton2021 = new SequentialAuton2021();
+  public FindBallsSequential2021 m_findBallsSeq2021 = new FindBallsSequential2021();
 
   //public static TurnTurret m_turnTurret;
   public static RunHarvester m_runHarvester;
@@ -91,7 +93,7 @@ public class RobotContainer {
   }
   
   public Command getAutonomousCommand(){
-    return m_seqAuton2021;
+    return m_findBallsSeq2021;
   }
 
   /**

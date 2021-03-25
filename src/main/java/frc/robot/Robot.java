@@ -7,6 +7,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,6 +38,9 @@ public class Robot extends TimedRobot {
   private Command m_runShooter = new RunShooter(RobotContainer.m_shooter);
   private Command m_runHarvester = new RunHarvester(RobotContainer.m_harvester);
 
+  NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+  NetworkTableEntry pipeline = table.getEntry("pipeline");
+  
   private RobotContainer m_robotContainer;
   private Command m_autonCommand;
 
@@ -87,7 +94,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // schedule the autonomous command (example)
-
+    pipeline.setNumber(1);
 
     m_autonCommand = m_robotContainer.getAutonomousCommand();
       
@@ -109,8 +116,7 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
    // m_seekAndCenter.cancel();
-    //m_autonCommand.cancel();
-
+    pipeline.setNumber(0);
     //Run the robot conveyor
     m_runConveyor.schedule();
 

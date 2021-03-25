@@ -38,6 +38,7 @@ public class MecanumDrivetrain extends SubsystemBase
     public static AHRS ahrs;
 
     public static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    public static NetworkTableEntry ta = table.getEntry("ta");
     public static NetworkTableEntry tx = table.getEntry("tx");
     public static NetworkTableEntry ty = table.getEntry("ty");
     public static NetworkTableEntry tv = table.getEntry("tv");
@@ -69,7 +70,7 @@ public class MecanumDrivetrain extends SubsystemBase
         if(RobotContainer.autoAimButton.get()){
             
             driveCarte(0, 0, -horizontalAuto());
-            //verticalMotor.set(verticalAuto());
+            Shooter.autoVertical();
         }
         else{
             driveCarte(returnLeftAxis(0), -returnLeftAxis(1), returnRightAxis(0));
